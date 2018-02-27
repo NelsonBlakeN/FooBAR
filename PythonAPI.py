@@ -3,14 +3,30 @@ import MySQLdb
 
 class PythonAPI:
     def __init__(self):
-        self.conn = MySQLdb.connect(host="database.cs.tamu.edu", user="blake.nelson", passwd="Tamu@2019", db="blake.nelson")
-
-        self.cursor = self.conn.cursor()
+        pass
 
     def execute(self, query=None):
+        results = None
+        conn = None
+
+        # Sanitize input
         if query is None or query is "":
             return "Query was null. Exiting"
+        try:
+            # Make connection
+            conn = MySQLdb.connect(host="database.cs.tamu.edu", user="blake.nelson", passwd="Tamu@2019", db="blake.nelson")
+        except:
+            return "Connection failed."
 
-        self.cursor.execute(query)
-        self.conn.commit()
-        return self.cursor.fetchone()
+        try:
+            # Execute query and commit changes (if any were made)
+            with conn.cursor() as cursor:
+                cursor.execute(query)
+            conn.commit()
+
+            # Obtain results
+            results = cursor.fetchone()
+        finally:
+            conn.close()
+
+        return results
