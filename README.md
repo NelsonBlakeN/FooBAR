@@ -31,6 +31,8 @@ It is recommended to clone this repository in a location <b>outside</b> of the t
          * Add all of the files in your <i>current directory</i> (`.`) 
          * If you do <b>not</b> want all of these files, then add them individually: 
                `git add <path/to/file>`<br/>
+      * `git commit -m <your message>`
+         * This will save all of your changes to the current branch that your on. Descriptive messages are good!
    4. When you are ready, push commits to the remote repository.
       * `git push` 
          * Enter login credentials if prompted.
