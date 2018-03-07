@@ -8,6 +8,12 @@ Obtaining the source code for this project is straightforward. If the user is ne
 #### Note for team members
 It is recommended to clone this repository in a location <b>outside</b> of the team Drive folder. This way, changes are not being synced inadvertently, and commits overwritten. This theoretically would not be a problem if proper branching convention is being followed, but there is nothing wrong with being extra safe.
 
+### Setting up the Raspberry Pi
+The hardware design for this project can be found in the picture. Certain files but be configured on the raspberry pi for it to be able to communicate on the Texas A&M WiFi network. In the setup folder,
+there is a file labeled `wpa_supplicant.conf`. The contents of this file must be added to the users Pi at `/etc/wpa_supplicant/wpa_supplicant.conf`. There is another file in the setup folder as well,
+`interfaces`. The contents of this file must be added to the users `/etc/network/interfaces` file on the Pi. In this case, the users has the option of either commenting out their current `wlan0`
+configuration, or naming this new configuration `wlan1`. However, user be warned that this was only testing as `wlan0`.
+
 ## Maintenance
    To maintain and develop this project, follow the steps below.
    1. Clone it as described in the Installment section
