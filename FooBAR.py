@@ -1,6 +1,6 @@
 import serial   # Import serial library
 import time
-# from api.PythonAPI import PythonAPI
+from api.PythonAPI import PythonAPI
 
 DEV_PORT = '/dev/ttyACM0'   # Fill in by testing
 
@@ -11,4 +11,3 @@ print("Running FooBAR...")
 while True:
     if arduinoSerialData.inWaiting() > 0:
         print(arduinoSerialData.readline())
-#	time.sleep(.5)
