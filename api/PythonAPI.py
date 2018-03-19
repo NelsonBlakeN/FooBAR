@@ -5,6 +5,10 @@ class PythonAPI:
     def __init__(self):
         pass
 
+    def person_passed(self):
+	query = "INSERT INTO `blake.nelson`.`FieldData` (`id`, `time`) VALUES (NULL, CURRENT_TIMESTAMP)"
+	self.execute(query)
+
     def execute(self, query=None):
         results = None
         conn = None
