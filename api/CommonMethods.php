@@ -1,15 +1,15 @@
-<?php
+<?php 
 
 class Common
-{
+{	
 	var $conn;
 	var $debug;
-
+	
 	var $db="database.cse.tamu.edu";
 	var $dbname="blake.nelson";
 	var $user="blake.nelson";
 	var $pass="Tamu@2019";
-
+			
 	function Common($debug)
 	{
 		$this->debug = $debug;
@@ -18,7 +18,7 @@ class Common
 	}
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
+	
 	function connect($db)// connect to MySQL DB Server
 	{
 		try
@@ -35,10 +35,10 @@ class Common
 	function executeQuery($sql, $filename) // execute query
 	{
 		if($this->debug == true) { echo("$sql <br>\n"); }
-		$rs = $this->conn->query($sql) or die("Could not execute query '$sql' in $filename");
+		$rs = $this->conn->query($sql) or die("Could not execute query '$sql' in $filename"); 
 		return $rs;
-	}
+	}			
 
-} // ends class, NEEDED!!
+}
 
 ?>

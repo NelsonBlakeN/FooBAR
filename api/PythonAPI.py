@@ -6,7 +6,7 @@ class PythonAPI:
         pass
 
     def person_passed(self):
-	query = "INSERT INTO `blake.nelson`.`FieldData` (`id`, `time`) VALUES (NULL, CURRENT_TIMESTAMP)"
+	query = "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES (CURRENT_TIME(), CURRENT_DATE(), CURRENT_DATE())"
 	self.execute(query)
 
     def execute(self, query=None):
