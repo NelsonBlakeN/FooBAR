@@ -5,20 +5,23 @@ include('CommonMethods.php');
 $debug = false;
 $COMMON = new Common($debug);
 
-//prints out the current number of persons in the list
-function printcount()
+//prints out the length of a given rs list
+function countrs($rs)
 {
 	global $debug; global $COMMON;
-	
-	$sql1 = "SELECT * FROM Passerbys";
-	$rs = $COMMON-> executeQuery($sql1, $_SERVER["SCRIPT_NAME"]);
 	$count = 0;
 	while ($row = $rs->fetch(PDO::FETCH_ASSOC)){
 		++$count;
 	}
-	echo "Passerbys seen: ";
-	echo $count;
-	
+	return $count;
+}
+
+//returns the rs for every person in memory
+function all(){
+	global $debug; global $COMMON;
+	$sql = "SELECT * FROM `Passerbys`";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	return $rs;
 }
 
 //simulates the adding of a person at the current time
@@ -35,83 +38,63 @@ function adddummyweek(){
 
 	//add a new element
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('16:20:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('16:20:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('6:20:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:20:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('6:50:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('6:50:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('6:50:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('6:41:55', '2018-03-18', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:41:55', '2018-03-18')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('16:58:55', '2018-03-19', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('16:58:55', '2018-03-19')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('1:58:55', '2018-03-19', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('01:58:55', '2018-03-19')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('10:58:55', '2018-03-19', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('10:58:55', '2018-03-19')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('14:58:55', '2018-03-20', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('14:58:55', '2018-03-20')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('14:58:55', '2018-03-20', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('14:58:55', '2018-03-20')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('5:41:55', '2018-03-21', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:41:55', '2018-03-21')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('20:20:55', '2018-05-22', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('20:20:55', '2018-03-22')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('17:20:55', '2018-05-23', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('17:20:55', '2018-03-23')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('9:20:55', '2018-05-23', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('09:20:55', '2018-03-23')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('7:20:55', '2018-05-23', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('07:20:55', '2018-03-23')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('5:41:55', '2018-05-24', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:41:55', '2018-03-24')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('5:20:55', '2018-05-24', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:20:55', '2018-03-24')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-	$sql= "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES ('5:11:55', '2018-05-24', '2018')";
+	$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:11:55', '2018-03-24')";
 	$rs = $COMMON-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 
-}
-
-//prints the entirety of Passerby list
-function printtable()
-{
-	global $debug; global $COMMON;
-	$sql = "select * from Passerbys";
-	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-	echo "<br>\nStatus of table<br>\n";
-	echo("<table border='1px'>");
-	while($row = $rs->fetch(PDO::FETCH_ASSOC))
-	{
-		echo("<tr>");
-		foreach ($row as $element)
-		{ 
-			echo("<td>".$element."</td>");
-		}
-		echo("</tr>");
-	}
-	echo("</table>");
 }
 
 //gets the rs for the current day query
@@ -130,7 +113,7 @@ function daylist($date){
 	return $rs;
 }
 
-//prints a table given an rs with a particular title
+//prints a table given an rs with a particular date
 function printrs($rs,$title){
 	global $debug; global $COMMON;
 	echo "<br>\n$title<br>\n";
@@ -148,15 +131,22 @@ function printrs($rs,$title){
 }
 
 
-
-//clears the whole table
+//returns the rs of all times between two timestamps
+function between($ts1, $ts2){
+	global $debug; 
+	global $COMMON;
+	$sql = "SELECT * FROM `Passerbys` WHERE timestamp(date,time) BETWEEN '$ts1' AND '$ts2'";
+	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	return $rs;
+}
 
 //adddummyweek();
-
-printcount();
-printtable();
-printrs(daylist('2018-03-19'),"From the 24th");
-printrs(currentdaylist(),"Today");
+printrs(all());
+echo countrs(all());
+//printrs(daylist('2018-03-23'),"From date");
+//printrs(currentdaylist(),"Today");
+printrs(between("2018-03-18 16:20:55", "2018-03-19 14:58:55"));
+echo countrs(between("2018-03-18 16:20:55", "2018-03-19 14:58:55"));
 
 
 
