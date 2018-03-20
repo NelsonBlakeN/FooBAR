@@ -126,6 +126,10 @@ function currentdaylist(){
 function daylist($date){
 	global $debug; global $COMMON;
 	$sql = "SELECT * FROM `Passerbys` WHERE date = '$date'";
+	if ($date = NULL || $date = ''){
+		echo "date null";
+		$sql = "SELECT * FROM `Passerbys` WHERE date = CURRENT_DATE()";
+	}
 	$rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 	return $rs;
 }
@@ -147,16 +151,13 @@ function printrs($rs,$title){
 	echo("</table>");
 }
 
-
-
-//clears the whole table
-
 //adddummyweek();
 
 printcount();
 printtable();
-printrs(daylist('2018-03-19'),"From the 24th");
-printrs(currentdaylist(),"Today");
+//printrs(daylist('2018-03-24'),"From the 24th");
+printrs(daylist(),"Today");
+//printrs(currentdaylist(),"Today");
 
 
 
