@@ -1,94 +1,130 @@
 from IRSensor import IRSensor
 
+# The traffic counter is intantiated as a finite state
+# machine, to track the different states of the sensors
+# and determine if a person has passed.
 class TrafficCounterFSM:
     def __init__(self, front_pin, back_pin):
-        self.state = 0
-        self.front_sensor = IRSensor()
-        self.back_sensor = IRSensor()
-        self.pins = [front_pin, back_pin]
-        self.front_pin = front_pin
-        self.back_pin = back_pin
+        self.state = 0                      # Current state of the device
+        self.front_sensor = IRSensor()      # Front sensor of device
+        self.back_sensor = IRSensor()       # Back sensor of device
+        self.pins = [front_pin, back_pin]   # Sensor pins
+        self.front_pin = front_pin          # Front sensor pin
+        self.back_pin = back_pin            # Back sensor pin
 
-    def updateFSM(frontData=None, backData=None):
+    # Update finite state machine
+    # @params: frontData(int), raw data recieved from the front sensor
+    #          backData(int), raw data recieved from the back sensor
+    # @returns: boolean (raw), whether or not someone has passed the device
+    def updateFSM(self, frontData=None, backData=None):
         if frontData is None and backData is None:
             # Bad reading
             return
 
         # Update sensor FSMs
-        front_trigger = front_sensor.updateFSM(frontData)
-        back_trigger = back_sensor.updateFSM(backData)
+        front_trigger = self.front_sensor.updateFSM(frontData)
+        back_trigger = self.back_sensor.updateFSM(backData)
 
+        # Initial (beginning) state
         if self.state == 0:
+            print("State: "+str(self.state))
             if not front_trigger and back_trigger:
                 self.state = 2
             elif front_trigger and not back_trigger:
                 self.state = 4
             elif front_trigger and back_trigger:
                 self.state = 7
+        # Front sensor triggered, back sensor not
+        # After state 2
         elif self.state == 1:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 2
             elif front_trigger and back_trigger:
                 self.state = 3
+        # Back sensor triggered first, front sensor not
         elif self.state == 2:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif front_trigger and not back_trigger:
                 self.state = 1
             elif front_trigger and back_trigger:
                 self.state = 3
+        # Both sensors triggered
+        # After state 2
         elif self.state == 3:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 2
             elif front_trigger and not back_trigger:
                 self.state = 1
+        # Front sensor triggered first, back sensor not
         elif self.state == 4:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 5
             elif front_trigger and back_trigger:
                 self.state = 6
+        # Back sensor triggered, front sensor not
+        # After state 4
         elif self.state == 5:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
+                # Person passed
+                print("Person passed")
                 return 1
             elif front_trigger and not back_trigger:
                 self.state = 4
             elif front_trigger and back_trigger:
                 self.state = 6
+        # Both sensors triggered
+        # After state 4
         elif self.state == 6:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 5
             elif front_trigger and back_trigger:
                 self.state = 4
+        # Both sensors triggered first
         elif self.state == 7:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 8
-            elif front_trigger and back_trigger:
+            elif front_trigger and not back_trigger:
                 self.state = 9
+        # Back sensor triggered, front sensor not
+        # After state 7
         elif self.state == 8:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif front_trigger and not back_trigger:
                 self.state = 9
             elif front_trigger and back_trigger:
                 self.state = 7
+        # Front sensor triggered, back sensor not
+        # After state 8
         elif self.state == 9:
+            print("State: "+str(self.state))
             if not front_trigger and not back_trigger:
                 self.state = 0
             elif not front_trigger and back_trigger:
                 self.state = 8
             elif front_trigger and back_trigger:
                 self.state = 7
+        # Default, go back to beginning
         else:
             self.state = 0
         return 0

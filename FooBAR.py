@@ -1,27 +1,48 @@
 import serial   # Import serial library
-import time
 from api.PythonAPI import PythonAPI
 from TrafficCounterFSM import TrafficCounterFSM
 
-DEV_PORT = '/dev/ttyACM0'   # Fill in by testing
-FRONT_PIN_L = 0
-BACK_PIN_L = 0
-FRONT_PIN_R = 0
-BACK_PIN_R = 0
+# Define constants: representing ports on the board that
+# are needed for the appropriate objects.
+DEV_PORT = '/dev/ttyACM0'   # Serial port used by Arduino on Raspberry Pi
+FRONT_PIN_L = 0		        # Pin used by front left sensor
+BACK_PIN_L = 0		        # Pin used by back left sensor
+FRONT_PIN_R = 0		        # Pin used by front right sensor
+BACK_PIN_R = 0		        # Pin used by back right sensor
 
-arduinoSerialData = serial.Serial(DEV_PORT, 9600)
-left_fsm = TrafficCounterFSM(FRONT_PIN_L, BACK_PIN_L)
-right_fsm = TrafficCounterFSM(FRONT_PIN_R, BACK_PIN_R)
-api = PythonAPI()
+# Creating necessary objects
+arduinoSerialData = serial.Serial(DEV_PORT, 9600)	    # Collect serial data from Ardunio
+left_fsm = TrafficCounterFSM(FRONT_PIN_L, BACK_PIN_L)	# Tracks state of left sensor set
+right_fsm = TrafficCounterFSM(FRONT_PIN_R, BACK_PIN_R)	# Tracks state of right sensor set
+api = PythonAPI()					                    # Python API object
 
 print("Running FooBAR...")
 
+# Tracks which sensor the current data belongs to
 iter = 0
+
+# Flush buffer before beginning
+arduinoSerialData.flushInput()
+
+# Synchronize input signals
+# x = arduinoSerialData.readline()
+# while x != "X":
+#     print(x)
+#     x = arduinoSerialData.readline()
+
+# Read data from Arduino
 while True:
     if arduinoSerialData.inWaiting() > 0:
-        # 0 0 0 0 x 1 1 0 0 x ....
         # Recieved pin number of updated sensor
-        data = arduinoSerialData.readline()
+        data = arduinoSerialData.read()
+        data = (data == "1") # TODO: This will result in an "X" becoming 0. Possible
+                             # solution: send all data from Arduino in one byte
+        print(str(iter), ": Raw data=", str(data), "(", type(data), ")")
+
+	    # Tracks whether a person passed the box on either side
+        passed_left = 0
+        passed_right = 0
+
         if iter == 0:
             frontLeftData = data
         elif iter == 1:
@@ -31,12 +52,16 @@ while True:
         elif iter == 3:
             backRightData = data
         elif iter == 4:
-            # Deliminator is reached
-            # Update FSMs
+            # Deliminator is reached, update FSMs
             passed_left = left_fsm.updateFSM(frontLeftData, backLeftData)
             passed_right = right_fsm.updateFSM(frontRightData, backRightData)
-        if passed_left:
-            api.person_passed()
-        if passed_right:
+
+        # If a person passed, update the database through the API
+        if passed_left or passed_right:
             api.person_passed()
 
+	    # Update iterator
+        if iter < 4:
+	        iter += 1
+        elif iter >= 4:
+	        iter = 0
