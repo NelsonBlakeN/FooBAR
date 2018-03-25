@@ -1,5 +1,5 @@
 class IRSensor:
-    def __init__:
+    def __init__(self):
         self.state = 0
         self.tigger = False
         pass
