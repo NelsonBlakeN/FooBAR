@@ -1,5 +1,9 @@
 <?php 
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 class Common
 {	
 	var $conn;
@@ -59,73 +63,33 @@ class Common
 
 	//simulates the adding of a person at the current time
 	function adddummyperson(){
-
-		//add a new element
 		$sql2 = "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES (CURRENT_TIME(), CURRENT_DATE(), CURRENT_DATE())";
 		$rs = $this-> executeQuery($sql2, $_SERVER["SCRIPT_NAME"]);
 	}
 
 	//adds the dummy week to the database
 	function adddummyweek(){
+		$this -> adddummyday('2018-3-18');
+		$this -> adddummyday('2018-3-19');
+		$this -> adddummyday('2018-3-20');
+		$this -> adddummyday('2018-3-21');
+		$this -> adddummyday('2018-3-22');
+		$this -> adddummyday('2018-3-23');
+		$this -> adddummyday('2018-3-24');
+	}
 
-		//add a new element
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('16:20:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:20:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:50:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('06:41:55', '2018-03-18')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('16:58:55', '2018-03-19')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('01:58:55', '2018-03-19')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('10:58:55', '2018-03-19')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('14:58:55', '2018-03-20')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('14:58:55', '2018-03-20')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:41:55', '2018-03-21')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('20:20:55', '2018-03-22')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('17:20:55', '2018-03-23')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('09:20:55', '2018-03-23')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('07:20:55', '2018-03-23')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:41:55', '2018-03-24')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:20:55', '2018-03-24')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-
-		$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('05:11:55', '2018-03-24')";
-		$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+	//adds a dummy day of a random number of people based on a string input of a date
+	function adddummyday($date){
+		$ppl = rand(20,100);
+		for ($i = 0; $i < $ppl; ++$i){
+			$h = rand(0,23);
+			$m = rand(0,59);
+			$s = rand(0,59);
+			$time = $h . ":" . $m . ":" . $s;
+			$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('$time', '$date')";
+			$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+			echo("added $time on $date<br>");
+		}
 	}
 
 	//gets the rs for the current day query
@@ -138,6 +102,18 @@ class Common
 	//returns the rs for a particulr date
 	function daylist($date){
 		$sql = "SELECT * FROM `Passerbys` WHERE date = '$date'";
+		$rs = $this->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+		return $rs;
+	}
+
+	//returns the rs for a particular hour, takes a datetime as the input
+	function hourlist(dateTime $datetime){
+		$hour = $datetime->format('H');
+		$date = $datetime->format('Y-m-d');
+		$dt1 = $datetime -> format('Y-m-d H:i:s');
+		$dt2 = $datetime ->modify('+1 hour');
+		$dt2 = $dt2 -> format('Y-m-d H:i:s');
+		$sql = "SELECT * FROM `Passerbys` WHERE timestamp(date,time) BETWEEN '$dt1' AND '$dt2'";
 		$rs = $this->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
 		return $rs;
 	}
@@ -165,6 +141,132 @@ class Common
 		return $rs;
 	}
 
+	//gives an inclusive array of dates between two dates
+	function daterange($startdate,$enddate){
+		$date1 = new DateTime($startdate);
+		$date2 = new DateTime($enddate);
+		$date2->modify('+1 day');
+
+		$dates = array();
+		$period = new DatePeriod(
+		     $date1,
+		     new DateInterval('P1D'),
+		     $date2
+		);
+		foreach ($period as $key => $value) {
+     		array_push($dates, $value->format('Y-m-d'));
+		}
+		return $dates;
+	}
+
+	//gives an inclusive array of datetime hours between two hours, takes datetimes as inputs
+	function timerange(dateTime $starttime, dateTime $endtime){
+		$times = array();
+		$period = new DatePeriod($starttime, new DateInterval('PT1H'), $endtime);
+		foreach ($period as $key => $value) {
+     		array_push($times, $value);
+		}
+		return $times;
+	}
+	
+	//outputs a array of counts for people in given days
+	function dayhistogram($startdate,$enddate){
+		$datearray = $this-> daterange($startdate,$enddate);
+		$countarray = array();
+		foreach ($datearray as $date){
+			$rs = $this-> daylist("$date");
+			$daycount = $this->countrs($rs);
+			array_push($countarray, $daycount);
+		}
+		return $countarray;
+	}
+
+	//outputs a array of counts for people in given hours
+	function hourhistogram(dateTime $dt1, dateTime $dt2){
+		$datearray = $this->timerange($dt1,$dt2);
+		$countarray = array();
+		foreach ($datearray as $date){
+			$rs = $this-> hourlist($date);
+			$daycount = $this->countrs($rs);
+			array_push($countarray, $daycount);
+		}
+		return $countarray;
+	}
+
+	//outputs an array of date names (Monday, tuesday ect.) between two dates
+	function getdatenames($startdate, $enddate){
+		$date1 = new DateTime($startdate);
+		$date2 = new DateTime($enddate);
+		$date2->modify('+1 day');
+		$datenames = array();
+		$period = new DatePeriod(
+		     $date1,
+		     new DateInterval('P1D'),
+		     $date2
+		);
+		foreach ($period as $key => $value) {
+     		array_push($datenames, $value->format('l'));
+		}
+		return $datenames;
+	}
+
+	//this will modify necessary variables to set the chart to display a centain range of days
+	function setchartdays(&$chartdata, &$title, $startdate, $enddate){
+
+		//setting the data
+		$newcdata = array();
+		$dates = $this-> daterange($startdate,$enddate);
+		$counts = $this-> dayhistogram($startdate,$enddate);
+		$datenames = $this-> getdatenames($startdate, $enddate);
+		for ($i = 0; $i < sizeof($dates); ++$i){
+			array_push($newcdata, array("label"=> $datenames[$i], "y"=> $counts[$i]));
+		}
+		$chartdata = $newcdata;
+
+		//setting the title
+		$date1 = new DateTime($startdate);
+		$date2 = new DateTime($enddate);
+		$date1 = $date1->format('m-d-Y');
+		$date2 = $date2->format('m-d-Y');
+		$title = "Passerbys from $date1 to $date2";
+	}
+
+	//this willset the chart to display data between certain hours of the day
+	function setcharthours(&$chartdata, &$title, $starthour, $endhour, $date){
+		//divide the hour input
+		$time1 = explode(":",$starthour);
+		$time2 = explode(":",$endhour);
+		$datearray = explode("-", $date);
+		$year = $datearray[0];
+		$month = $datearray[1];
+		$day = $datearray[2];
+
+		//creating and setting up the datetime objects
+		$dt1 = new datetime(date('m/d/Y', time()));
+		$dt1 -> setTime($time1[0],"00");
+		$dt1 -> setDate($datearray[0],$datearray[1],$datearray[2]);
+		$dt2 = new datetime(date('m/d/Y', time()));
+		$dt2 -> setTime($time2[0],"00");
+		$dt2 -> setDate($datearray[0],$datearray[1],$datearray[2]);
+
+		//set the chart data
+		$times = $this->timerange($dt1,$dt2);
+		$counts = $this -> hourhistogram($dt1,$dt2);
+		$newcdata = array();
+		for ($i = 0; $i < sizeof($times); ++$i){
+			array_push($newcdata, array(
+				"label"=> $times[$i]->format("H:i"), 
+				"y"=> $counts[$i]
+			));
+		}
+		$chartdata = $newcdata;
+
+		//setting the title
+		$t1 = $dt1->format('H:i');
+		$t2 = $dt2->format('H:i');
+		$day = $dt1->format('m/d/Y');
+		$title = "Passerbys from $t1 to $t2 on $day";
+	}
 }
 
 ?>

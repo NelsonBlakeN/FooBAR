@@ -10,17 +10,11 @@ $dataPoints;
 $charttitle;
 
 //input variables
-$startdate = ($_POST["Startdate"]);
-$enddate = ($_POST["Enddate"]);
+$starthour = ($_POST["Starthour"]);
+$endhour = ($_POST["Endhour"]);
+$date = ($_POST["Date"]);
 
-//sanitize the date input
-$interval = date_diff(new datetime($startdate), new datetime($enddate));
-if ($interval-> d > 6 || $interval-> m !=0){
-	global $enddate;
-	$newED = new datetime($startdate);
-	$newED = $newED -> modify('+6 day');
-	$enddate = $newED ->format('Y-m-d');
-}
+//make sure to sanitize the input for the hours
 	
 //error checking
 ini_set('display_errors', 1);
@@ -28,7 +22,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 //setting the chart properties
-$COMMON->setchartdays($dataPoints, $charttitle, $startdate, $enddate);
+$COMMON -> setcharthours($dataPoints, $charttitle, $starthour, $endhour, $date);
 
 ?>
 <!DOCTYPE HTML>
