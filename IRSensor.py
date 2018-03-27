@@ -17,16 +17,12 @@ class IRSensor:
             # Bad reading
             return
 
-        print("Data: "+str(data)+"("+str(type(data))+")")
         # Initial (beginning) state
         if self.state == 0:
-            print("Sensor state: "+str(self.state))
             if data:
                 # Sensor was high for 1 cycle
                 self.state = 1
         elif self.state == 1:
-            print("Sensor state: "+str(self.state))
-
             if data:
                 # Sensor was high for 2 cycles
                 self.state = 2
@@ -34,8 +30,6 @@ class IRSensor:
                 # Sensor is no longer high
                 self.state = 0
         elif self.state == 2:
-            print("Sensor state: "+str(self.state))
-
             if data:
                 # Sensor was high for 3 cycles, "triggered"
                 self.state = 3
@@ -44,14 +38,10 @@ class IRSensor:
                 # Sensor is no longer high
                 self.state = 0
         elif self.state == 3:
-            print("Sensor state: "+str(self.state))
-
             if not data:
                 # Sensor was low for 1 cycle
                 self.state = 4
         elif self.state == 4:
-            print("Sensor state: "+str(self.state))
-
             if not data:
                 # Sensor was low for 2 cycles
                 self.state = 5
@@ -59,8 +49,6 @@ class IRSensor:
                 # Sensor is still "triggered"
                 self.state = 3
         elif self.state == 5:
-            print("Sensor state: "+str(self.state))
-
             if not data:
                 # Sensor was low for 3 cycles, no longer "triggered"
                 self.state = 0
@@ -69,8 +57,6 @@ class IRSensor:
                 # Sensor is still "triggered"
                 self.state = 3
         else:
-            print("Sensor state: "+str(self.state))
-
             # Default, go back to beginning
             self.state = 0
 

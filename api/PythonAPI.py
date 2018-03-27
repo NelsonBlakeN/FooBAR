@@ -12,6 +12,7 @@ class PythonAPI:
 	    # query = "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES (CURRENT_TIME(), CURRENT_DATE(), CURRENT_DATE())"
 	    # self.execute(query)
         self.test_count += 1
+        print("*********************************PERSON PASSED****************************************")
         print(self.test_count)
 
     # Execute a given query string
