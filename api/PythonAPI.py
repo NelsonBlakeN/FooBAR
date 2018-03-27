@@ -1,14 +1,19 @@
 import sys
 import MySQLdb
 
+# Object-oriented implemementation of the Python API.
 class PythonAPI:
     def __init__(self):
         pass
 
+    # Insert a single person into the database
     def person_passed(self):
-	query = "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES (CURRENT_TIME(), CURRENT_DATE(), CURRENT_DATE())"
-	self.execute(query)
+        query = "INSERT INTO Passerbys (`time`, `date`) VALUES (CURRENT_TIME(), CURRENT_DATE())"
+        self.execute(query)
 
+    # Execute a given query string
+    # @params: query (string), the query to be executed
+    # @returns: results (string), single result of query
     def execute(self, query=None):
         results = None
         conn = None
@@ -24,13 +29,14 @@ class PythonAPI:
 
         try:
             # Execute query and commit changes (if any were made)
-            with conn.cursor() as cursor:
-                cursor.execute(query)
+            cursor = conn.cursor()
+            cursor.execute(query)
             conn.commit()
 
             # Obtain results
             results = cursor.fetchone()
         finally:
+            # Always close connection (on fail or success)
             conn.close()
 
         return results
