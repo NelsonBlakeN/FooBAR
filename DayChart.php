@@ -47,6 +47,14 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	}]
 });
 chart.render();
+
+/*
+//show the max and the min
+<?php
+$COMMON->printextremes($dataPoints);
+
+?>
+*/
  
 }
 </script>

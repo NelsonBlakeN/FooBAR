@@ -61,9 +61,15 @@ class Common
 		return $rs;
 	}
 
-	//simulates the adding of a person at the current time
-	function adddummyperson(){
-		$sql2 = "INSERT INTO Passerbys (`time`, `date`, `year`) VALUES (CURRENT_TIME(), CURRENT_DATE(), CURRENT_DATE())";
+	//adds a person time and date
+	function addperson($time, $date){
+		$sql2 = "INSERT INTO Passerbys (`time`, `date`) VALUES ('$time','$date')";
+		$rs = $this-> executeQuery($sql2, $_SERVER["SCRIPT_NAME"]);
+	}
+
+	//clears all persons from database
+	function cleardatabase(){
+		$sql2 = "DELETE FROM `Passerbys` WHERE 1";
 		$rs = $this-> executeQuery($sql2, $_SERVER["SCRIPT_NAME"]);
 	}
 
@@ -88,7 +94,6 @@ class Common
 			$time = $h . ":" . $m . ":" . $s;
 			$sql= "INSERT INTO Passerbys (`time`, `date`) VALUES ('$time', '$date')";
 			$rs = $this-> executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-			echo("added $time on $date<br>");
 		}
 	}
 
@@ -210,6 +215,49 @@ class Common
 		return $datenames;
 	}
 
+	function printextremes(&$chartdata){
+
+		$min= $chartdata[0]["y"];
+		$max= $chartdata[0]["y"];
+		$maxind = 0;
+		$minind = 0;
+		for($i = 0; $i<sizeof($chartdata); ++$i){
+			if($chartdata[$i]["y"] > $max){
+				$max = $chartdata[$i]["y"];
+				$maxind = $i;
+			}
+			if($chartdata[$i]["y"] < $min){
+				$min = $chartdata[$i]["y"];
+				$minind = $i;
+			}
+		}
+		$chartdata[$maxind]["indexLabel"] = "Maximum";
+		$chartdata[$minind]["indexLabel"] = "Minimum";
+	}
+
+	//this function will print basic data associated with a timeframe
+	function printdata(&$chartdata){
+		$values = array();
+		for($i = 0; $i<sizeof($chartdata); ++$i){
+			array_push($values, $chartdata[$i]["y"]);	
+		}
+		$average = array_sum($values)/count($values);
+		$mode = $this->array_mode($values);
+		$range = max($values) - min($values);
+		echo("Average: $average<br>Mode: $mode<br>Range: $range<br>");
+	}
+
+	//returns the mode of an array (cited from: http://blog.room34.com/archives/5773)
+	function array_mode($arr) {
+  		$count = array();
+  		foreach ((array)$arr as $val) {
+    		if (!isset($count[$val])) { $count[$val] = 0; }
+   			$count[$val]++;
+  		}
+  		arsort($count);
+  		return key($count);
+	}
+
 	//this will modify necessary variables to set the chart to display a centain range of days
 	function setchartdays(&$chartdata, &$title, $startdate, $enddate){
 
@@ -229,6 +277,12 @@ class Common
 		$date1 = $date1->format('m-d-Y');
 		$date2 = $date2->format('m-d-Y');
 		$title = "Passerbys from $date1 to $date2";
+
+		//add extremems labels
+		$this->printextremes($chartdata);
+
+		//printing other data
+		$this->printdata($chartdata);
 	}
 
 	//this willset the chart to display data between certain hours of the day
@@ -266,6 +320,12 @@ class Common
 		$t2 = $dt2->format('H:i');
 		$day = $dt1->format('m/d/Y');
 		$title = "Passerbys from $t1 to $t2 on $day";
+
+		//labeling
+		$this->printextremes($chartdata);
+
+		//printing other data
+		$this->printdata($chartdata);
 	}
 }
 
