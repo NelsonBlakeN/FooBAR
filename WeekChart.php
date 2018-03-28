@@ -31,6 +31,8 @@ error_reporting(E_ALL);
 $COMMON->setchartdays($dataPoints, $charttitle, $startdate, $enddate);
 
 ?>
+
+
 <!DOCTYPE HTML>
 <html>
 <head>  
@@ -57,7 +59,7 @@ chart.render();
 }
 </script>
 </head>
-<body>
+<body style="background-color:powderblue;">
 <div id="chartContainer" style="height: 370px; width: 100%;"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>

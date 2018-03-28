@@ -12,6 +12,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+//getting and displaying the total count
 $total = $COMMON -> countrs( $COMMON-> all());
 echo("$total peope counted since last reset");
 
@@ -21,10 +22,8 @@ echo("$total peope counted since last reset");
 <head>
 </head>
 <body style="background-color:powderblue;">
-
 <form>
 <input type="button" value="Return" onclick="window.location.href='http://projects.cse.tamu.edu/amiller15/Mainsite.php'" />
 </form>
-
 </body>
 </html>

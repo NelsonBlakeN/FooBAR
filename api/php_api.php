@@ -146,7 +146,7 @@ class Common
 		return $rs;
 	}
 
-	//gives an inclusive array of dates between two dates
+	//gives an inclusive array of dates between two dates (taken as inputs)
 	function daterange($startdate,$enddate){
 		$date1 = new DateTime($startdate);
 		$date2 = new DateTime($enddate);
@@ -215,8 +215,9 @@ class Common
 		return $datenames;
 	}
 
+	//this assigns lables to the max and min values of data set
 	function printextremes(&$chartdata){
-
+		//the y is the data value on the y axis
 		$min= $chartdata[0]["y"];
 		$max= $chartdata[0]["y"];
 		$maxind = 0;
@@ -261,7 +262,7 @@ class Common
 	//this will modify necessary variables to set the chart to display a centain range of days
 	function setchartdays(&$chartdata, &$title, $startdate, $enddate){
 
-		//setting the data
+		//setting the chart data
 		$newcdata = array();
 		$dates = $this-> daterange($startdate,$enddate);
 		$counts = $this-> dayhistogram($startdate,$enddate);
@@ -299,6 +300,7 @@ class Common
 		$dt1 = new datetime(date('m/d/Y', time()));
 		$dt1 -> setTime($time1[0],"00");
 		$dt1 -> setDate($datearray[0],$datearray[1],$datearray[2]);
+		
 		$dt2 = new datetime(date('m/d/Y', time()));
 		$dt2 -> setTime($time2[0],"00");
 		$dt2 -> setDate($datearray[0],$datearray[1],$datearray[2]);

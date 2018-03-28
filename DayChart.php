@@ -13,8 +13,6 @@ $charttitle;
 $starthour = ($_POST["Starthour"]);
 $endhour = ($_POST["Endhour"]);
 $date = ($_POST["Date"]);
-
-//make sure to sanitize the input for the hours
 	
 //error checking
 ini_set('display_errors', 1);
@@ -39,7 +37,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		text: <?php echo json_encode($charttitle); ?>
 	},
 	data: [{
-		type: "column", //change type to bar, line, area, pie, etc
+		type: "area", //change type to bar, line, area, pie, etc
 		//indexLabel: "{y}", //Shows y value on all Data Points
 		indexLabelFontColor: "#5A5757",
 		indexLabelPlacement: "outside",   
@@ -47,19 +45,11 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	}]
 });
 chart.render();
-
-/*
-//show the max and the min
-<?php
-$COMMON->printextremes($dataPoints);
-
-?>
-*/
  
 }
 </script>
 </head>
-<body>
+<body style="background-color:powderblue;">
 <div id="chartContainer" style="height: 370px; width: 100%;"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>

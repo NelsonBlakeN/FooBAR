@@ -4,7 +4,6 @@
 <head>
 </head>
 <body style="background-color:powderblue;">
-<!-- ADD COMMON OPTION BUTTONS -->
 
 <h1>Rec Center Passerby Tracker</h1>
     
@@ -31,12 +30,6 @@ Day: <input type="date" name="Date" value ="2018-03-18"><br>
 <form>
 <input type="button" value="Admin Page" onclick="window.location.href='http://projects.cse.tamu.edu/amiller15/AdminPage.php'" />
 </form>
-
-<a href="http://projects.cse.tamu.edu/amiller15/AdminPage.php">
-<img src="pope.jpg" alt="Girl in a jacket" style="width:500px;height:300px;">
-</a>
-
-
 
 </body>
 </html>
