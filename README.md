@@ -3,7 +3,7 @@
 FooBAR is the first, mid-semester project for Dr. Shawn Lupoli in his CSCE 315-504 class. This repository contains the python source code that will interact with Arduino sensors and a MySQL database hosted by the university in order to create a functional product that satisfies all customer requirements.
 
 ## Installment
-Obtaining the source code for this project is straightforward. If the user is new to git, than a download link (giant green button) can be found in the top right of the GitHub file explorer. However, if the user is familiar with git, then all they must do is a simple `git clone <URL>,` using the URL link that can also be found under the big green button above.
+Obtaining the source code for this project is straightforward. If the user is new to git, than a download link (giant green button) can be found in the top right of the GitHub file explorer. However, if the user is familiar with git, then all they must do is a simple `git clone <URL>`, using the URL link that can also be found under the big green button above.
 
 #### Note for team members
 It is recommended to clone this repository in a location <b>outside</b> of the team Drive folder. This way, changes are not being synced inadvertently, and commits overwritten. This theoretically would not be a problem if proper branching convention is being followed, but there is nothing wrong with being extra safe.
@@ -13,6 +13,10 @@ The hardware design for this project can be found in the picture. Certain files 
 there is a file labeled `wpa_supplicant.conf`. The contents of this file must be added to the users Pi at `/etc/wpa_supplicant/wpa_supplicant.conf`. There is another file in the setup folder as well,
 `interfaces`. The contents of this file must be added to the users `/etc/network/interfaces` file on the Pi. In this case, the users has the option of either commenting out their current `wlan0`
 configuration, or naming this new configuration `wlan1`. However, user be warned that this was only testing as `wlan0`.
+During development, the student's account used to connect to the Texas A&M WiFi had its
+permissions revoked. According to the IT Help Desk, this was due to suspicious activity
+related to the account, which could include multiple successive attemps to log in (brute
+force attack). The account was restored without issue. While the students were <b>not</b> doing anything suspicious, the user should be aware of these risks, and act accordingly if they do occur.
 
 ## Maintenance
    To maintain and develop this project, follow the steps below.
@@ -23,7 +27,7 @@ configuration, or naming this new configuration `wlan1`. However, user be warned
 
    2. Create a new branch for your individual development.<br/>
       * The proper convention for branching is to make a new branch for any new feature, bug fix, or any other individual component added to the code base.<br/>
-      * `git checkout -b <your branch name>.`
+      * `git checkout -b <your branch name>`
          * Create a new branch that is exactly the same as the current branch you are on when you ran the command
          * Any changes made will not affect the original branch. 
          * <b> This is very important when branching off of the master branch. We do not want to make changes directly to master. </b> 
@@ -32,7 +36,7 @@ configuration, or naming this new configuration `wlan1`. However, user be warned
       * Now, you will be able to write as much code as you want, test it, save it, or delete it, and not affect the rest of the people on the project. <br/>
    3. When you are ready to add something to your branch (code that definitely works and that you want to keep), you'll need to commit it.
       * `git status`
-         * See a list of files that have been modified, but `not staged for commit.` 
+         * See a list of files that have been modified, but "`not staged for commit`" 
       * `git add .` 
          * Add all of the files in your <i>current directory</i> (`.`) 
          * If you do <b>not</b> want all of these files, then add them individually: 
@@ -56,7 +60,7 @@ configuration, or naming this new configuration `wlan1`. However, user be warned
           * As long as you are not making any changes directly to master (which you should not be), then this should not result in any conflicts. 
        * `git checkout <your branch>`
           * Check out your custom branch
-       * `git merge master.`
+       * `git merge master`
           * merge the target branch into your custom branch 
           * This will merge `master` <i>into</i> `your branch`.<br/>
     7. Resolve `Merge Conflicts` errors.
