@@ -1,10 +1,8 @@
 '''''''''''''''''''''''''''
     File:       TestCases.py
     Project:    CSCE 315 Project 1, Spring 2018
-    Author:     Blake Nelson
     Date:       2/24/2018
     Section:    504
-    E-mail:     blake.nelson@tamu.edu
 
     The containing class and its functions serve as the
     tests that validate the completeness and validity of the
@@ -37,18 +35,18 @@ class TestPythonAndDatabase(unittest.TestCase):
     # PreCondition:  None
     # PostCondition: The API call for adding DB entries will be tested for effectiveness
     #-----------------------------------------
-    def TestPersonPassed(self):
+    def testPersonPassed(self):
         try:
             # Simulate person passing, and obtain before/after results
-            preResults = self.m_api.Execute("SELECT * FROM `blake.nelson`.`Passerbys` ORDER BY date DESC")
+            preResults = self.m_api.Execute("SELECT * FROM `Passerbys` ORDER BY date DESC")
             self.m_api.PersonPassed()
-            postResults = self.m_api.Execute("SELECT * FROM `blake.nelson`.`Passerbys` ORDER BY date DESC")
+            postResults = self.m_api.Execute("SELECT * FROM `Passerbys` ORDER BY date DESC")
 
             # Confirm that the results were different (there was a new row)
             assert preResults is not postResults, "Test failed: result comparison returned {}".format(str(preResults is not postResults))
 
             # Remove simulated row
-            self.m_api.Execute("DELETE FROM `blake.nelson`.`Passerbys` ORDER BY date DESC limit 1")
+            self.m_api.Execute("DELETE FROM `Passerbys` ORDER BY date DESC limit 1")
         except:
             err = traceback.format_exc()
             assert False, "An exception was caught: \n{}".format(err)
@@ -58,7 +56,7 @@ class TestPythonAndDatabase(unittest.TestCase):
     # PreCondition:  None
     # PostCondition: The DB connection will be validated
     #-----------------------------------------
-    def TestConnectionToDb(self):
+    def testConnectionToDb(self):
         try:
             # Perform inconsequential query to confirm connection with DB
             results = self.m_api.Execute("SELECT VERSION()")
@@ -72,15 +70,15 @@ class TestPythonAndDatabase(unittest.TestCase):
     # PreCondition:  None
     # PostCondition: The API call for executing queries will be evaluated
     #-----------------------------------------
-    def TestDatabasePost(self):
+    def testDatabasePost(self):
         try:
             # Insert fake data into fake table and confirm it exists
-            self.m_api.Execute("INSERT INTO `blake.nelson`.`TestTable` (`id`, `time`) VALUES ('100', CURRENT_TIMESTAMP)")
+            self.m_api.Execute("INSERT INTO `TestTable` (`id`, `time`) VALUES ('100', CURRENT_TIMESTAMP)")
             results = self.m_api.Execute("SELECT * FROM `TestTable` WHERE `TestTable`.`id` = 100")
             assert results is not None, "No results were returned."
 
             # Remove fake data from table
-            self.m_api.Execute("DELETE FROM `blake.nelson`.`TestTable` WHERE `TestTable`.`id` = 100")
+            self.m_api.Execute("DELETE FROM `TestTable` WHERE `TestTable`.`id` = 100")
         except:
             err = traceback.format_exc()
             assert False, "An exception was caught: \n{}".format(err)
@@ -90,7 +88,7 @@ class TestPythonAndDatabase(unittest.TestCase):
     # PreCondition:  None
     # PostCondition: Catching bad preconditions on the Execute API call will be evaluated
     #-----------------------------------------
-    def TestNullQuery(self):
+    def testNullQuery(self):
         try:
             # Attempt an empty query execution, and confirm it was caught
             results = self.m_api.Execute("")
