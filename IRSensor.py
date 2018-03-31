@@ -1,64 +1,82 @@
-# Each IR sensor is represented as a finite state machine,
-# as a way to debounce the raw signal that is recieved
-# from the Arduino.
+'''''''''''''''''''''''''''
+    File:       IRSensor.py
+    Project:    CSCE 315 Project 1, Spring 2018
+    Author:     Blake Nelson, Robert Preston
+    Date:       2/24/2018
+    Section:    504
+    E-mail:     blake.nelson@tamu.edu, prestonre@tamu.edu
+
+    This file implements the IR sensor as a finite state
+    machine object, as a way to debounce the raw signal recieved
+    from the Arduino. The FSM recieves raw data from its parent
+    device, and interprets it based on the raw data from previous
+    cycles, which are represented as the states. These cycles of
+    data are then converted into trigger events, which are returned
+    to the parent device.
+    In this documentation, "high" means the given sensor has something
+    in front of it; "low" means it does not.
+'''''''''''''''''''''''''''
+
 class IRSensor:
     def __init__(self):
-        self.state = 0          # Current state of IR sensor finite state machine
-        self.trigger = False    # Tracks whether or not the IR sensor is considered "triggered"
-        pass
+        self.m_state = 0          # Current state of IR sensor finite state machine
+        self.m_trigger = False    # Trigger state of IR sensor
 
-    # Updates that finite state machine, based on the raw
-    # data input from the main file.
-    # @param: data (int), the raw data sent from the Arduino
-    # @returns: self.trigger (bool), whether the device is
-    #           considered "triggered"
-    def updateFSM(self, data=None):
+    #-----------------------------------------
+    # Name: UpdateFSM
+    # PreCondition:  raw sensor data is given
+    # PostCondition: the state of the finite state machine will be updated, and
+    #                translated into information about any presence in front of
+    #                the sensor. A trigger event will also be returned.
+    #-----------------------------------------
+    def UpdateFSM(self, data=None):
+        # Handle unmet precondition (bad reading)
         if data is None:
-            # Bad reading
             return
 
         # Initial (beginning) state
-        if self.state == 0:
+        # Sensor is low
+        # Not "triggered" (trigger is not set)
+        if self.m_state == 0:
             if data:
-                # Sensor was high for 1 cycle
-                self.state = 1
-        elif self.state == 1:
-            if data:
-                # Sensor was high for 2 cycles
-                self.state = 2
-            else:
-                # Sensor is no longer high
-                self.state = 0
-        elif self.state == 2:
-            if data:
-                # Sensor was high for 3 cycles, "triggered"
-                self.state = 3
-                self.trigger = True
-            else:
-                # Sensor is no longer high
-                self.state = 0
-        elif self.state == 3:
-            if not data:
-                # Sensor was low for 1 cycle
-                self.state = 4
-        elif self.state == 4:
-            if not data:
-                # Sensor was low for 2 cycles
-                self.state = 5
-            else:
-                # Sensor is still "triggered"
-                self.state = 3
-        elif self.state == 5:
-            if not data:
-                # Sensor was low for 3 cycles, no longer "triggered"
-                self.state = 0
-                self.trigger = False
-            else:
-                # Sensor is still "triggered"
-                self.state = 3
-        else:
-            # Default, go back to beginning
-            self.state = 0
+                self.m_state = 1
 
-        # Return trigger state
-        return self.trigger
+        # Sensor was high for 1 cycle
+        elif self.m_state == 1:
+            if data:
+                self.m_state = 2
+            else:
+                self.m_state = 0
+
+        # Sensor was high for 2 cycles
+        elif self.m_state == 2:
+            if data:
+                self.m_state = 3
+                self.m_trigger = True
+            else:
+                self.m_state = 0
+
+        # Sensor was high for (at least) 3 cycles
+        # "Triggered" (trigger is set)
+        elif self.m_state == 3:
+            if not data:
+                self.m_state = 4
+
+        # Sensor was low for 1 cycle
+        elif self.m_state == 4:
+            if not data:
+                self.m_state = 5
+            else:
+                self.m_state = 3
+
+        # Sensor was low for 2 cycles
+        elif self.m_state == 5:
+            if not data:
+                self.m_state = 0
+                self.m_trigger = False
+            else:
+                self.m_state = 3
+        else:
+            self.m_state = 0
+
+        return self.m_trigger

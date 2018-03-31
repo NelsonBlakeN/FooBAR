@@ -1,24 +1,44 @@
+'''''''''''''''''''''''''''
+    File:       PythonAPI.py
+    Project:    CSCE 315 Project 1, Spring 2018
+    Author:     Blake Nelson
+    Date:       2/24/2018
+    Section:    504
+    E-mail:     blake.nelson@tamu.edu
+
+    This file contains the API used on the traffic
+    counting device, written in python. It contains a function to
+    automatically update a database with information about
+    a passing pedestrian, which calls another query execution function
+    within the same class.
+'''''''''''''''''''''''''''
+
 import sys
 import MySQLdb
 
-# Object-oriented implemementation of the Python API.
 class PythonAPI:
     def __init__(self):
         pass
 
-    # Insert a single person into the database
-    def person_passed(self):
+    #-----------------------------------------
+    # Name: PersonPassed
+    # PreCondition:  None
+    # PostCondition: An entry will be added to the DB
+    #-----------------------------------------
+    def PersonPassed(self):
         query = "INSERT INTO Passerbys (`time`, `date`) VALUES (CURRENT_TIME(), CURRENT_DATE())"
         self.execute(query)
 
-    # Execute a given query string
-    # @params: query (string), the query to be executed
-    # @returns: results (string), single result of query
-    def execute(self, query=None):
+    #-----------------------------------------
+    # Name: Execute
+    # PreCondition:  The SQL query string is valid
+    # PostCondition: The query will be executed and results will be returned
+    #-----------------------------------------
+    def Execute(self, query=None):
         results = None
         conn = None
 
-        # Sanitize input
+        # Sanitize input (handle unmet precondition)
         if query is None or query is "":
             return "Query was null. Exiting"
         try:

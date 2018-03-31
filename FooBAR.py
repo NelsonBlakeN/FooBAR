@@ -1,42 +1,73 @@
+'''''''''''''''''''''''''''
+    File:       FooBAR.py
+    Project:    CSCE 315 Project 1, Spring 2018
+    Author:     Blake Nelson, Robert Preston
+    Date:       3/6/2018
+    Section:    504
+    E-mail:     blake.nelson@tamu.edu, prestonre@tamu.edu
+
+    This file contains the main function for counting the foot
+    traffic through an area. By reading on a serial port of the
+    host machine, the program will use the data to update two
+    finite state machines, representing both sides of the device.
+    It will then use the data to detect the passing of pedestrians,
+    and automatically log the information in a database.
+'''''''''''''''''''''''''''
+
 import serial
 from api.PythonAPI import PythonAPI
 from TrafficCounterFSM import TrafficCounterFSM
 
-# Define constants
-DEV_PORT = '/dev/ttyACM0'   # Serial port used by Arduino on Raspberry Pi
+#-----------------------------------------
+# Name: main
+# PreCondition:  None
+# PostCondition: Database entries will exist, with accurate information about foot traffic
+#                in a given area
+#-----------------------------------------
+def main():
+    # Define constants
+    DEVPORT = '/dev/ttyACM0'    # Serial port used by Arduino on Raspberry Pi
+    BIT1 = 1                    # Bits in serial byte, ordered from right to left
+    BIT2 = 2
+    BIT3 = 3
+    BIT4 = 4
+    BAUDRATE = 9600
 
-# Creating necessary objects
-arduinoSerialData = serial.Serial(DEV_PORT, 9600)   # Collect serial data from Ardunio
-left_fsm = TrafficCounterFSM()	                    # Tracks state of left sensor set
-right_fsm = TrafficCounterFSM()	                    # Tracks state of right sensor set
-api = PythonAPI()					                # Python API object
+    # Creating necessary objects
+    arduinoSerialData = serial.Serial(DEVPORT, BAUDRATE)    # Collect serial data from Ardunio
+    leftFsm = TrafficCounterFSM()                           # Tracks state of left sensor set
+    rightFsm = TrafficCounterFSM()                          # Tracks state of right sensor set
+    api = PythonAPI()                                       # Python API object
 
-print("Running FooBAR...")
+    print("Running FooBAR...")
 
-# Flush buffer before beginning
-arduinoSerialData.flushInput()
+    # Flush buffer before beginning
+    arduinoSerialData.flushInput()
 
-# Read data from Arduino
-while True:
-    if arduinoSerialData.inWaiting() > 0:
-        # Recieved byte containing sensor data
-        data = arduinoSerialData.read()
+    # Read data from Arduino
+    while True:
+        if arduinoSerialData.inWaiting() > 0:
+            # Recieved byte containing sensor data
+            data = arduinoSerialData.read()
 
-        if data:
-            data = ord(data)
-            front_left_data  = data&1   # Front left sensor  = 1st bit
-            back_left_data   = data&2   # Back left sensor   = 2nd bit
-            front_right_data = data&4   # Front right sensor = 3rd bit
-            back_right_data  = data&8   # Back right sensor  = 4th bit
+            if data:
+                data = ord(data)
+                frontLeftData  = data & BIT1   # Front left sensor  = 1st bit
+                backLeftData   = data & BIT2   # Back left sensor   = 2nd bit
+                frontRightData = data & BIT3   # Front right sensor = 3rd bit
+                backRightData  = data & BIT4   # Back right sensor  = 4th bit
 
-            # Tracks whether a person passed the box on either side
-            passed_left = left_fsm.updateFSM(front_left_data, back_left_data)
-            passed_right = right_fsm.updateFSM(front_right_data, back_right_data)
+                # Tracks whether a person passed the box on either side
+                passedLeft = leftFsm.UpdateFSM(frontLeftData, backLeftData)
+                passedRight = rightFsm.UpdateFSM(frontRightData, backRightData)
 
-            # If a person passed, update the database once per side
-            if passed_left:
-                api.person_passed()
-            if passed_right:
-                api.person_passed()
-        else:
-            print("Data was none")
+                # If a person passed, update the database once per side
+                if passedLeft:
+                    api.PersonPassed()
+                if passedRight:
+                    api.PersonPassed()
+            else:
+                print("Data was none")
+
+if __name__ == "__main__":
+    main()
