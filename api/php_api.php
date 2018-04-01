@@ -305,6 +305,15 @@ class Common
 		$dt2 -> setTime($time2[0],"00");
 		$dt2 -> setDate($datearray[0],$datearray[1],$datearray[2]);
 
+		//cleanse the data
+		if ($dt2 < $dt1){
+			echo("Bad input given. Data adjusted to positive hour range.");
+			$dt2 = new datetime(date('m/d/Y', time()));
+			$dt2 -> setTime($time1[0],"00");
+			$dt2 -> setDate($datearray[0],$datearray[1],$datearray[2]);
+			$dt2 -> add(new DateInterval("PT3H"));
+		}
+
 		//set the chart data
 		$times = $this->timerange($dt1,$dt2);
 		$counts = $this -> hourhistogram($dt1,$dt2);

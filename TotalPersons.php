@@ -14,7 +14,7 @@ error_reporting(E_ALL);
 
 //getting and displaying the total count
 $total = $COMMON -> countrs( $COMMON-> all());
-echo("$total peope counted since last reset");
+echo("$total people counted since last reset");
 
 ?>
 
