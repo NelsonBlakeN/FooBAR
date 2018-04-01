@@ -1,0 +1,15 @@
+The below SQL command will generate a table with the exact
+name and set up that was used in this project. To execute this
+command:
+   1. Log into phpMyAdmin
+   2. Select the database that this table belongs in
+   3. At the top, select the "SQL" tab
+   4. Paste the below command in the field that appears
+   5. Press "GO" in the bottom right
+Once these steps are completed, a new table should appear under
+the database in the left hand menu, with the appropriate fields.
+
+CREATE TABLE `Passerbys` (
+ `time` time NOT NULL,
+ `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

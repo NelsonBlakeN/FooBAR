@@ -1,43 +1,101 @@
+'''''''''''''''''''''''''''
+    File:       TestCases.py
+    Project:    CSCE 315 Project 1, Spring 2018
+    Date:       2/24/2018
+    Section:    504
+
+    The containing class and its functions serve as the
+    tests that validate the completeness and validity of the
+    traffic counter API. It tests that database entries are
+    entered successfully, database connections are successful,
+    general database executions are successful, and that inputs
+    are sanitized properly.
+'''''''''''''''''''''''''''
+
 import sys
 import traceback
 import unittest
 from datetime import datetime
-from PythonAPI import PythonAPI
+sys.path.insert(0,'..')
+from api.PythonAPI import PythonAPI
 
 
 class TestPythonAndDatabase(unittest.TestCase):
 
+    #-----------------------------------------
+    # Name: setUp
+    # PreCondition:  None
+    # PostCondition: Any objects or values needed in the test cases are instantiated/set
+    #-----------------------------------------
     def setUp(self):
-        self.api = PythonAPI()
+        self.m_api = PythonAPI()    # API Object
 
-    # Test connection with database
-    def test_connection_to_db(self):
+    #-----------------------------------------
+    # Name: TestPersonPassed
+    # PreCondition:  None
+    # PostCondition: The API call for adding DB entries will be tested for effectiveness
+    #-----------------------------------------
+    def testPersonPassed(self):
         try:
-            results = self.api.execute("SELECT VERSION()")
+            # Simulate person passing, and obtain before/after results
+            preResults = self.m_api.Execute("SELECT * FROM `Passerbys` ORDER BY date DESC")
+            self.m_api.PersonPassed()
+            postResults = self.m_api.Execute("SELECT * FROM `Passerbys` ORDER BY date DESC")
+
+            # Confirm that the results were different (there was a new row)
+            assert preResults is not postResults, "Test failed: result comparison returned {}".format(str(preResults is not postResults))
+
+            # Remove simulated row
+            self.m_api.Execute("DELETE FROM `Passerbys` ORDER BY date DESC limit 1")
+        except:
+            err = traceback.format_exc()
+            assert False, "An exception was caught: \n{}".format(err)
+
+    #-----------------------------------------
+    # Name: TestConnectionToDb
+    # PreCondition:  None
+    # PostCondition: The DB connection will be validated
+    #-----------------------------------------
+    def testConnectionToDb(self):
+        try:
+            # Perform inconsequential query to confirm connection with DB
+            results = self.m_api.Execute("SELECT VERSION()")
             assert results is not None, "No results were returned."
         except:
             err = traceback.format_exc()
-            assert False, "Connection failed: {}".format(err)
+            assert False, "Connection failed: \n{}".format(err)
 
-    # Test ability to create new data (execute func)
-    def test_database_post(self):
+    #-----------------------------------------
+    # Name: TestDatabasePost
+    # PreCondition:  None
+    # PostCondition: The API call for executing queries will be evaluated
+    #-----------------------------------------
+    def testDatabasePost(self):
         try:
-            self.api.execute("INSERT INTO `blake.nelson`.`TestTable` (`id`, `time`) VALUES ('100', CURRENT_TIMESTAMP)")
-            results = self.api.execute("SELECT * FROM `TestTable` WHERE `TestTable`.`id` = 100")
+            # Insert fake data into fake table and confirm it exists
+            self.m_api.Execute("INSERT INTO `TestTable` (`id`, `time`) VALUES ('100', CURRENT_TIMESTAMP)")
+            results = self.m_api.Execute("SELECT * FROM `TestTable` WHERE `TestTable`.`id` = 100")
             assert results is not None, "No results were returned."
-            self.api.execute("DELETE FROM `blake.nelson`.`TestTable` WHERE `TestTable`.`id` = 100")
+
+            # Remove fake data from table
+            self.m_api.Execute("DELETE FROM `TestTable` WHERE `TestTable`.`id` = 100")
         except:
             err = traceback.format_exc()
-            assert False, "An exception was caught: {}".format(err)
+            assert False, "An exception was caught: \n{}".format(err)
 
-    # Test input sanitization
-    def test_null_query(self):
+    #-----------------------------------------
+    # Name: TestPersonPassed
+    # PreCondition:  None
+    # PostCondition: Catching bad preconditions on the Execute API call will be evaluated
+    #-----------------------------------------
+    def testNullQuery(self):
         try:
-            results = self.api.execute("")
+            # Attempt an empty query execution, and confirm it was caught
+            results = self.m_api.Execute("")
             assert results == "Query was null. Exiting", "Null query was not handled as expected. Error: {}".format(results)
         except:
             err = traceback.format_exc()
-            assert False, "An exception was caught: {}".format(err)
+            assert False, "An exception was caught: \n{}".format(err)
 
 if __name__ == '__main__':
     unittest.main()
