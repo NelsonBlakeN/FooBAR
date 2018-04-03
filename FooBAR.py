@@ -52,6 +52,7 @@ def main():
 
             if data:
                 data = ord(data)
+
                 frontLeftData  = data & BIT1   # Front left sensor  = 1st bit
                 backLeftData   = data & BIT2   # Back left sensor   = 2nd bit
                 frontRightData = data & BIT3   # Front right sensor = 3rd bit
